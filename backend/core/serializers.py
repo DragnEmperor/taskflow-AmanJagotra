@@ -6,8 +6,15 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 from core.meta import MetaSerializer
+from django.db.models import Count
 
 User = get_user_model()
+
+
+class BriefUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "name", "email")
 
 
 class BaseTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -19,14 +26,11 @@ class BaseTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, str]:
         data = super().validate(attrs)
-        data.pop("refresh", None)  # Remove refresh token from response
+        data.pop("refresh", None)
+        data["token"] = data.pop("access")
+        user = self.user
+        data["user"] = BriefUserSerializer(user).data
         return data
-
-
-class BriefUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("id", "name", "email")
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -46,8 +50,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-        token = BaseTokenObtainPairSerializer.get_token(user)
-        return {"token": str(token.access_token), "user": user}
+        data = BaseTokenObtainPairSerializer.get_token(user)
+        return {"token": str(data.access_token), "user": user}
 
 
 class TaskSerializer(MetaSerializer, serializers.ModelSerializer):
@@ -60,14 +64,6 @@ class TaskSerializer(MetaSerializer, serializers.ModelSerializer):
         object_only_fields = ("meta_created_at", "meta_updated_at", "project", "description")
         update_fields = ("title", "description", "status", "priority", "assignee", "due_date")
 
-    def validate(self, attrs):
-        if "assignee" in attrs:
-            try:
-                User.objects.get(id=attrs["assignee"].id)
-            except User.DoesNotExist:
-                raise serializers.ValidationError("Assigned user does not exist.")
-        return super().validate(attrs)
-
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data["status"] = instance.get_status_display()
@@ -77,7 +73,7 @@ class TaskSerializer(MetaSerializer, serializers.ModelSerializer):
 
 class ProjectSerializer(MetaSerializer, serializers.ModelSerializer):
     tasks = TaskSerializer(many=True, read_only=True)
-    owner = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = models.Project
@@ -85,3 +81,25 @@ class ProjectSerializer(MetaSerializer, serializers.ModelSerializer):
         object_only_fields = ("tasks",)
         read_only_fields = ("meta_created_at",)
         update_fields = ("name", "description")
+
+
+class ProjectStatsSerializer(serializers.Serializer):
+    project_id = serializers.UUIDField(write_only=True)
+    tasks_by_status = serializers.DictField(child=serializers.IntegerField(), read_only=True)
+    tasks_by_assignee = serializers.DictField(child=serializers.IntegerField(), read_only=True)
+
+    def validate_project_id(self, value):
+        if not models.Project.objects.filter(id=value).exists():
+            raise serializers.ValidationError("Project with the given ID does not exist.")
+        return value
+
+    def to_representation(self, instance):
+        tasks = models.Task.objects.filter(project_id=instance["project_id"])
+        tasks_by_status = tasks.values("status").annotate(count=Count("id"))
+        tasks_by_assignee = tasks.values("assignee__id", "assignee__name").annotate(count=Count("id"))
+        status_mapping = dict(models.Task.STATUS.choices)
+        return {
+            "tasks_by_status": {status_mapping[task["status"]]: task["count"] for task in tasks_by_status},
+            "tasks_by_assignee_id": {str(task["assignee__id"]): task["count"] for task in tasks_by_assignee},
+            "tasks_by_assignee_name": {str(task["assignee__name"]): task["count"] for task in tasks_by_assignee},
+        }

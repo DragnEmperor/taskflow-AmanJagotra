@@ -28,9 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = os.getenv("DEVELOPMENT").lower() == "true"
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -48,11 +47,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # for debugging query count and time taken for each query
+    # "greening.middleware.QueryMonitor",
 ]
 
 ROOT_URLCONF = "greening.urls"
@@ -114,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -134,13 +136,8 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
 ]
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-CORS_ALLOWED_ORIGINS = CORS_ORIGIN_WHITELIST = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
-CORS_ORIGIN_REGEX_WHITELIST = CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://investedge\.tech$",
-    r"^https://.+\.investedge\.tech$",
-    *os.getenv("CORS_ALLOWED_ORIGIN_REGEXES", "").split(","),
-]
+CSRF_TRUSTED_ORIGINS = [o for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
+CORS_ALLOWED_ORIGINS = [o for o in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if o]
 
 AUTH_USER_MODEL = "core.User"
 
@@ -151,6 +148,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_PAGINATION_CLASS": "greening.utils.PageSizePaginator",
+    "EXCEPTION_HANDLER": "greening.utils.custom_exception_handler",
     "DATE_INPUT_FORMATS": ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S"],
     "COMPACT_JSON": True,
 }

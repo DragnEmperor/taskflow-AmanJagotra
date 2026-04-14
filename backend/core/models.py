@@ -57,6 +57,9 @@ class Project(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="projects")
     meta_created_at = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        ordering = ["-meta_created_at"]
+
     def __str__(self):
         return self.name
 
@@ -79,10 +82,13 @@ class Task(models.Model):
     priority = models.CharField(max_length=1, choices=PRIORITY.choices, default=PRIORITY.MEDIUM)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
     assignee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
-    due_date = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name="created_tasks")
     meta_created_at = models.DateTimeField(default=timezone.now)
     meta_updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-meta_created_at"]
 
     def __str__(self):
         return self.title
