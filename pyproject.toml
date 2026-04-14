@@ -1,0 +1,30 @@
+[project]
+name = "greening-python"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "cryptography>=46.0.7",
+    "django>=6.0.4",
+    "django-filter>=25.2",
+    "djangorestframework>=3.17.1",
+    "djangorestframework-simplejwt>=5.5.1",
+    "psycopg>=3.3.3",
+    "psycopg-binary>=3.3.3",
+    "python-dotenv>=1.2.2",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.10",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
