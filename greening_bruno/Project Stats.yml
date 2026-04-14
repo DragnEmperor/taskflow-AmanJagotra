@@ -1,0 +1,71 @@
+info:
+  name: Project Stats
+  type: http
+  seq: 13
+
+http:
+  method: GET
+  url: "{{URL}}/projects/:projectID/stats"
+  params:
+    - name: projectID
+      value: 019d889d-0a44-728f-a387-872fac59396e
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 200
+    request:
+      url: "{{URL}}/projects/:projectID/stats"
+      method: GET
+      params:
+        - name: projectID
+          value: 019d889d-0a44-728f-a387-872fac59396e
+          type: path
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: date
+          value: Tue, 14 Apr 2026 03:35:32 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: allow
+          value: GET, HEAD, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "243"
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "tasks_by_status": {
+              "Done": 1,
+              "In Progress": 2,
+              "To Do": 10
+            },
+            "tasks_by_assignee_id": {
+              "019d88a8-f823-72ef-b61a-8edc8183ca6b": 10,
+              "019d8a04-c845-7647-b560-e332c4e07414": 1,
+              "None": 2
+            },
+            "tasks_by_assignee_name": {
+              "Test User 2": 10,
+              "Test User 1": 1,
+              "None": 2
+            }
+          }

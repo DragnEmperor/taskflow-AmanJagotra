@@ -1,0 +1,76 @@
+info:
+  name: Update Project
+  type: http
+  seq: 6
+
+http:
+  method: PATCH
+  url: "{{URL}}/projects/:projectD"
+  params:
+    - name: projectD
+      value: 019d89c8-3205-729b-bae1-dfb9480ab91d
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "name": "New Name for Update",
+        "description":"My custom project 3"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 200
+    request:
+      url: "{{URL}}/projects/:projectD"
+      method: PATCH
+      params:
+        - name: projectD
+          value: 019d89c8-3205-729b-bae1-dfb9480ab91d
+          type: path
+      body:
+        type: json
+        data: |-
+          {
+            "name": "New Name for Update",
+            "description":"My custom project 3"
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: date
+          value: Tue, 14 Apr 2026 02:27:52 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: allow
+          value: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "216"
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "id": "019d89c8-3205-729b-bae1-dfb9480ab91d",
+            "tasks": [],
+            "owner": "019d88a8-f823-72ef-b61a-8edc8183ca6b",
+            "name": "New Name for Update",
+            "description": "My custom project 3",
+            "meta_created_at": "2026-04-14T02:18:11.845899Z"
+          }

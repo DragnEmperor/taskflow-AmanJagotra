@@ -1,0 +1,55 @@
+info:
+  name: Delete Task
+  type: http
+  seq: 11
+
+http:
+  method: DELETE
+  url: "{{URL}}/tasks/:taskD"
+  params:
+    - name: taskD
+      value: 019d88aa-ac63-768a-b278-ee25e206b415
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 204
+    request:
+      url: "{{URL}}/tasks/:taskD"
+      method: DELETE
+      params:
+        - name: taskD
+          value: 019d88aa-ac63-768a-b278-ee25e206b415
+          type: path
+      body:
+        type: json
+        data: ""
+    response:
+      status: 204
+      statusText: No Content
+      headers:
+        - name: date
+          value: Mon, 13 Apr 2026 21:11:27 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: allow
+          value: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "0"
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: text
+        data: ""

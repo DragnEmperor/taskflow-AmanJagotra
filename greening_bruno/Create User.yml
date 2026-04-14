@@ -1,0 +1,77 @@
+info:
+  name: Create User
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{URL}}/auth/register"
+  body:
+    type: json
+    data: |-
+      {
+        "name":"Aman",
+        "email":"aman@test.com",
+        "password": "aimbot123"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        let data = res.body;
+        bru.setEnvVar("ACCESS_TOKEN", data.token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 201
+    request:
+      url: "{{URL}}/auth/register"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "name":"Aman",
+            "email":"aman@test.com",
+            "password": "aimbot123"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: date
+          value: Mon, 13 Apr 2026 20:33:47 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: allow
+          value: POST, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "734"
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2MTk4ODI2LCJpYXQiOjE3NzYxMTI0MjYsImp0aSI6IjhlZDlhMzQyNzEwMzRjZDM4YzE2MDg1NmI3NThmZmJmIiwidXNlcl9pZCI6IjAxOWQ4ODhjLWRlZTEtNzZkMi05MjMwLTVjM2UxMzhjN2ViMCIsImVtYWlsIjoiYW1hbkB0ZXN0LmNvbSIsImlzcyI6IkdSRUVOSU5HIn0.BHFtEksabBXBShuc7ApOGuXoUCcvLOnlbJxiXuCAR1HtnTXJkeSj8Lwc1Fo48hfFb8xQKg1GmL_jjg_AauLvsQSEN2BnYgpyRYj7LRx-h-19aRfdGB1nnGOnpA4OsIJp3qSZkItmjTe2C0rvYp0KgGgVDWIhiwS57nji0aWFgW7nGYz-xKGaJ3EU1J85ObDCPjEMf2LblAL6bb0uK3ZqvXGA9-ZqXeHnIIGCneJLLG2OvFAJ9mgjEMw4jmK4JXS--eHtHvV-sh1BX1US_HFBNwbfpdKwGQbXcS8AdzE4RwybvKzp3i9wbb63AKT4aO-0dtkU3qGWKPOEITw4qywCpA",
+            "user": {
+              "id": "019d888c-dee1-76d2-9230-5c3e138c7eb0",
+              "name": "Aman",
+              "email": "aman@test.com"
+            }
+          }

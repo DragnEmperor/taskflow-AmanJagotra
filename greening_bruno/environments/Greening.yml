@@ -1,0 +1,6 @@
+name: Greening
+variables:
+  - name: URL
+    value: http://localhost:8000
+  - name: ACCESS_TOKEN
+    value: ""

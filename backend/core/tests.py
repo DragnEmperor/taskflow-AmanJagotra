@@ -245,7 +245,7 @@ class TestTasks:
 
     def test_delete_task_by_non_owner(self, other_auth_client, task):
         response = other_auth_client.delete(self.task_url(task.id))
-        assert response.status_code == 404
+        assert response.status_code == 403
 
     def test_create_task_missing_title(self, auth_client, project):
         response = auth_client.post(self.url(project.id), {}, format="json")
@@ -263,7 +263,7 @@ class TestProjectStats:
             title="T1", project=project, created_by=user, status=Task.STATUS.TODO, priority=Task.PRIORITY.LOW
         )
         Task.objects.create(
-            title="T2", project=project, created_by=user, status=Task.STATUS.DONE, priority=Task.PRIORITY.HIGH
+            title="T2", project=project, created_by=user, status=Task.STATUS.DONE, priority=Task.PRIORITY.HIGH, assignee=user
         )
         Task.objects.create(
             title="T3",
@@ -277,3 +277,6 @@ class TestProjectStats:
         assert response.status_code == 200
         assert "tasks_by_status" in response.data
         assert "tasks_by_assignee_id" in response.data
+        assert response.data["tasks_by_status"]["To Do"] == 2
+        assert response.data["tasks_by_status"]["Done"] == 1
+        assert response.data["tasks_by_assignee_id"][str(user.id)] == 2

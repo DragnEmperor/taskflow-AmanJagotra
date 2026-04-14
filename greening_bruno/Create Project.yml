@@ -1,0 +1,70 @@
+info:
+  name: Create Project
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{URL}}/projects"
+  body:
+    type: json
+    data: |-
+      {
+        "name":"Project 2",
+        "description": "Another Test Project"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 201
+    request:
+      url: "{{URL}}/projects"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "name":"Project 2",
+            "description": "Another Test Project"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: date
+          value: Tue, 14 Apr 2026 04:45:05 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: allow
+          value: GET, POST, HEAD, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "207"
+        - name: vary
+          value: origin
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "id": "019d8a4e-add8-72d0-9f32-8007cf50df97",
+            "tasks": [],
+            "owner": "019d8896-bbe4-7669-8c1b-33204d499a27",
+            "name": "Project 2",
+            "description": "Another Test Project",
+            "meta_created_at": "2026-04-14T04:45:05.368933Z"
+          }

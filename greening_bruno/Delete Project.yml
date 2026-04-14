@@ -1,0 +1,55 @@
+info:
+  name: Delete Project
+  type: http
+  seq: 7
+
+http:
+  method: DELETE
+  url: "{{URL}}//projects/:projectD"
+  params:
+    - name: projectD
+      value: 019d89c7-374a-72f2-9e7d-6d3ef4211df5
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 204
+    request:
+      url: "{{URL}}//projects/:projectD"
+      method: DELETE
+      params:
+        - name: projectD
+          value: 019d89c7-374a-72f2-9e7d-6d3ef4211df5
+          type: path
+      body:
+        type: json
+        data: ""
+    response:
+      status: 204
+      statusText: No Content
+      headers:
+        - name: date
+          value: Tue, 14 Apr 2026 02:17:14 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: allow
+          value: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "0"
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: text
+        data: ""

@@ -1,0 +1,98 @@
+info:
+  name: Retrieve Single Project
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{URL}}/projects/:projectID"
+  params:
+    - name: projectID
+      value: 019d889d-0a44-728f-a387-872fac59396e
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 200
+    request:
+      url: "{{URL}}/projects/:projectID"
+      method: GET
+      params:
+        - name: projectID
+          value: 019d889d-0a44-728f-a387-872fac59396e
+          type: path
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: date
+          value: Mon, 13 Apr 2026 21:05:03 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: allow
+          value: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "1123"
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "id": "019d889d-0a44-728f-a387-872fac59396e",
+            "tasks": [
+              {
+                "id": "019d88a4-0c71-70ef-966a-c97fa8edf246",
+                "status": "To Do",
+                "priority": "Medium",
+                "title": "Task for Project 1",
+                "description": "",
+                "due_date": null,
+                "meta_created_at": "2026-04-13T20:59:05.713131Z",
+                "meta_updated_at": "2026-04-13T20:59:05.713268Z",
+                "project": "019d889d-0a44-728f-a387-872fac59396e",
+                "assigned_to": null
+              },
+              {
+                "id": "019d88a8-2b91-77f2-a118-500da62394c7",
+                "status": "To Do",
+                "priority": "Medium",
+                "title": "Task for Project 1",
+                "description": "",
+                "due_date": null,
+                "meta_created_at": "2026-04-13T21:03:35.825963Z",
+                "meta_updated_at": "2026-04-13T21:03:35.826097Z",
+                "project": "019d889d-0a44-728f-a387-872fac59396e",
+                "assigned_to": null
+              },
+              {
+                "id": "019d88a9-447e-70ad-aa80-a0e84ee7f7ef",
+                "status": "To Do",
+                "priority": "Medium",
+                "title": "Task for Project 1",
+                "description": "Testing Tasks Project 1",
+                "due_date": null,
+                "meta_created_at": "2026-04-13T21:04:47.742932Z",
+                "meta_updated_at": "2026-04-13T21:04:47.743185Z",
+                "project": "019d889d-0a44-728f-a387-872fac59396e",
+                "assigned_to": "019d88a8-f823-72ef-b61a-8edc8183ca6b"
+              }
+            ],
+            "name": "Project 1",
+            "description": "",
+            "meta_created_at": "2026-04-13T20:51:26.404904Z"
+          }

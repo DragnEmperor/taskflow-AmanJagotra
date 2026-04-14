@@ -1,0 +1,86 @@
+info:
+  name: Create Project Tasks
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{URL}}/projects/:projectID/tasks"
+  params:
+    - name: projectID
+      value: 019d889d-0a44-728f-a387-872fac59396e
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "title":"Task for Project 1",
+        "description": "Testing Tasks Project 1",
+        "assigned_to": "019d88a8-f823-72ef-b61a-8edc8183ca6b",
+        "status": "I",
+        "priority":"H"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 201
+    request:
+      url: "{{URL}}/projects/:projectID/tasks"
+      method: POST
+      params:
+        - name: projectID
+          value: 019d889d-0a44-728f-a387-872fac59396e
+          type: path
+      body:
+        type: json
+        data: |-
+          {
+            "title":"Task for Project 1",
+            "description": "Testing Tasks Project 1",
+            "assigned_to": "019d88a8-f823-72ef-b61a-8edc8183ca6b",
+            "status": "I",
+            "priority":"H"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: date
+          value: Mon, 13 Apr 2026 21:08:14 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: allow
+          value: GET, POST, HEAD, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "369"
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "id": "019d88ac-6cdf-769f-95bf-fe27ce834329",
+            "title": "Task for Project 1",
+            "description": "Testing Tasks Project 1",
+            "status": "In Progress",
+            "priority": "High",
+            "due_date": null,
+            "meta_created_at": "2026-04-13T21:08:14.687368Z",
+            "meta_updated_at": "2026-04-13T21:08:14.687517Z",
+            "project": "019d889d-0a44-728f-a387-872fac59396e",
+            "assigned_to": "019d88a8-f823-72ef-b61a-8edc8183ca6b"
+          }

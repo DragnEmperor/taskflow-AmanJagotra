@@ -1,0 +1,120 @@
+info:
+  name: Login
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{URL}}/auth/login"
+  body:
+    type: json
+    data: |-
+      {
+        "email":"test@example.com",
+        "password":"password123"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        let data = res.body;
+        bru.setEnvVar("ACCESS_TOKEN", data.token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success 200
+    request:
+      url: "{{URL}}/auth/login"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "email":"aman@test.com",
+            "password":"aimbot123"
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: date
+          value: Tue, 14 Apr 2026 04:39:47 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: allow
+          value: POST, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "734"
+        - name: vary
+          value: origin
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2MjI3OTg3LCJpYXQiOjE3NzYxNDE1ODcsImp0aSI6IjVkZjU3MmExMzA3ZTQzNTJhMmEyYTUyYjg4NzE0MDdjIiwidXNlcl9pZCI6IjAxOWQ4ODk2LWJiZTQtNzY2OS04YzFiLTMzMjA0ZDQ5OWEyNyIsImVtYWlsIjoiYW1hbkB0ZXN0LmNvbSIsImlzcyI6IkdSRUVOSU5HIn0.QZDuqKEaCawOKz8YS7EUMKQ7AfbyjJuKcAdaIDy9VZ3icY3E4CTmWY0WUZJ6NngTAqnkqgt3RwSV5Cjnmyr45nVLrKyhhq8L2DRCxAfZyKbbfHtjz6NlOwaYk5H0ws1deigAwfGbQ4GG4tiP82Z_AARFRg_m60o3chGejYodZC9C8-lpu3TjSPtKW_A9fobOZbv23_awpP-VQ9klYjLWkhsZG-6yN0Uj7BZmHsQwvi43D-4icbzJ1D5jo3h-hZgsdkaSu0wlQ1hLESM7TnnAjT_WiiBjRNxSZksYs5JEHO3YATOVZ0R1X6sfJWtEiHXvPdX5mQ6sojHYP4SR1HFd-Q",
+            "user": {
+              "id": "019d8896-bbe4-7669-8c1b-33204d499a27",
+              "name": "Aman",
+              "email": "aman@test.com"
+            }
+          }
+  - name: Unauthorized 401
+    request:
+      url: "{{URL}}/auth/login"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "email":"test@example.com",
+            "password":"password123"
+          }
+    response:
+      status: 401
+      statusText: Unauthorized
+      headers:
+        - name: date
+          value: Tue, 14 Apr 2026 07:25:51 GMT
+        - name: server
+          value: WSGIServer/0.2 CPython/3.14.0rc3
+        - name: content-type
+          value: application/json
+        - name: www-authenticate
+          value: Bearer realm="api"
+        - name: allow
+          value: POST, OPTIONS
+        - name: x-frame-options
+          value: DENY
+        - name: content-length
+          value: "24"
+        - name: vary
+          value: origin
+        - name: x-content-type-options
+          value: nosniff
+        - name: referrer-policy
+          value: same-origin
+        - name: cross-origin-opener-policy
+          value: same-origin
+      body:
+        type: json
+        data: |-
+          {
+            "error": "unauthorized"
+          }
